@@ -11,8 +11,8 @@ import time
 source = []
 training_set = []
 testing_set = []
-ipt_to_hn_weight = []
-hn_to_opt_weight = []
+# ipt_to_hn_weight = []
+# hn_to_opt_weight = []
 shuffled_training_set = []
 shuffled_testing_set = []
 acc_training_set_list = []
@@ -21,12 +21,12 @@ pre_delta_ipt_to_hn = []
 pre_delta_hn_to_opt = []
 plot_x = []
 
-hidden_units = 8
-num_inputs = 16
-num_outputs = 26
+hidden_units = 2
+num_inputs = 2
+num_outputs = 2
 learning_rate = 0.3
 momentum = 0.3
-total_epoch = 50
+total_epoch = 1
 
 
 alphabet = 0
@@ -246,7 +246,7 @@ def train(first_weight, second_weight, the_shuffled_training_set, the_shuffled_t
             temp_h_list = calculate_h(the_shuffled_training_set[i], first_weight)            # hj
             temp_o_list = calculate_o(temp_h_list, second_weight)                   # ok
 
-            # error terms for output layer
+            # calculate the error terms
             temp_error_opt_list = []
             # target = 0
             for j in range(num_outputs):
@@ -257,7 +257,6 @@ def train(first_weight, second_weight, the_shuffled_training_set, the_shuffled_t
                 temp_error_opt = temp_o_list[j] * (1 - temp_o_list[j]) * (target - temp_o_list[j])
                 temp_error_opt_list.append(temp_error_opt)
 
-            # error terms for hidden layer
             temp_error_hidden_list = []
             for k in range(hidden_units):
                 weight_opt_sum = 0
@@ -298,21 +297,26 @@ def get_plot_x(the_x):
     for i in range(total_epoch + 1):
         the_x.append(i)
 
-read_data(source)
-split_data(source, training_set, testing_set)
-convert_to_int(training_set)
-convert_to_int(testing_set)
-
-get_mean_and_std_list(training_set, temp_mean_list, temp_std_list)
-get_mean_and_std(temp_mean_list, temp_std_list, temp_mean, temp_std)
-preprocess_data(training_set, temp_mean, temp_std)
-preprocess_data(testing_set, temp_mean, temp_std)
-
-
-init_weight(ipt_to_hn_weight, hn_to_opt_weight)
+# read_data(source)
+# split_data(source, training_set, testing_set)
+# convert_to_int(training_set)
+# convert_to_int(testing_set)
+#
+# get_mean_and_std_list(training_set, temp_mean_list, temp_std_list)
+# get_mean_and_std(temp_mean_list, temp_std_list, temp_mean, temp_std)
+# preprocess_data(training_set, temp_mean, temp_std)
+# preprocess_data(testing_set, temp_mean, temp_std)
+#
+# init_weight(ipt_to_hn_weight, hn_to_opt_weight)
 
 zero_list_ipt_to_hn(pre_delta_ipt_to_hn)
 zero_list_hn_to_opt(pre_delta_hn_to_opt)
+
+ipt_to_hn_weight = [[-0.25, -0.2], [-0.1, 0.1], [0.23, 0.24]]
+hn_to_opt_weight = [[-0.2, 0.2], [-0.1, 0.1], [-0.01, 0.01]]
+
+training_set = [[[-1.5, 0.5]], []]
+testing_set = [[[-1.5, 0.5]], []]
 
 shuffle_data_set(training_set, shuffled_training_set)
 shuffle_data_set(testing_set, shuffled_testing_set)
@@ -325,8 +329,7 @@ get_plot_x(plot_x)
 
 print acc_training_set_list
 
-plt.plot(plot_x, acc_training_set_list, color='r', label='training set'.format())
-# plt.show()
-plt.plot(plot_x, acc_testing_set_list, color='g', label='testing set'.format())
-plt.legend(loc='best')
+plt.plot(plot_x, acc_training_set_list)
+plt.show()
+plt.plot(plot_x, acc_testing_set_list)
 plt.show()
